@@ -13,7 +13,7 @@ public class ComandosVenda {
             String comando = "INSERT INTO tb_venda VALUES(null, ?, ?, ?, ?);";
             //conexao do banco de dados
             ConectaMySql conecta = new ConectaMySql();
-            Connection conexao = conecta.iniciarConexao();
+            conexao = conecta.iniciarConexao();
             //Preparar a conexão com o comando que será executado nela
             try {
                 PreparedStatement ps = conecta.iniciarConexao().prepareStatement(comando);
@@ -50,7 +50,7 @@ public class ComandosVenda {
 
 
         }
-        public void pesquisarProduto(String comando) {
+        public void pesquisarVenda(String comando) {
             //conexao do banco de dados
             Connection conexao;
             conexao = new ConectaMySql().iniciarConexao();
@@ -62,13 +62,13 @@ public class ComandosVenda {
                 ResultSet resultado = ps.executeQuery();//import java.sql.ResultSet
 
                 //Percorrer os valores que o SELECT buscou
-                System.out.println("ID Venda \tQuantidade Produto \tCPF\tData Nascimento");
+                System.out.println("ID Venda \tQuantidade Produto \tData Venda\tID do Cliente \tId do Produto");
                 while (resultado.next()) { //Enquanto tiverem linhas na tablea
                     SimpleDateFormat in = new SimpleDateFormat("yyyy-MM-dd");
                     SimpleDateFormat out = new SimpleDateFormat("dd/MM/yyyy");
                     String data = out.format(in.parse(resultado.getDate(4).toString()));
-                    System.out.println(resultado.getInt(1) + "\t" + resultado.getString(2) + "\t\t" + resultado.getString(3) +
-                            "\t" + data);
+                    System.out.println(resultado.getInt(1) + "\t" + resultado.getInt(2) + "\t\t" + data + resultado.getInt(4)
+                            + resultado.getInt(5));
                     System.out.println();
 
                     //Fechar a conexão
@@ -82,4 +82,34 @@ public class ComandosVenda {
                 throw new RuntimeException(e);
             }
         }
+    //Deletar Venda rapaziada <3333333
+    public boolean DeletarVenda(String comandoSQL) {
+        conexao = new ConectaMySql().iniciarConexao();
+
+        try {
+            PreparedStatement ps = conexao.prepareStatement(comandoSQL);
+            if (ps.executeUpdate() != 0){
+                conexao.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+    /******************Alterar Venda****************/
+    public boolean alterarVenda(String comandoSQL) {
+        //Conexao do banco de dados
+        conexao = new ConectaMySql().iniciarConexao();
+        try {
+            PreparedStatement ps = conexao.prepareStatement(comandoSQL);
+            if (ps.executeUpdate() != 0){
+                conexao.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
 }

@@ -75,4 +75,43 @@ public class ComandosCliente {
         }
 
     }
+    //Deletar Cliente rapaziada <3333333
+    public boolean deletarVenda(String comandoSQL) {
+        conexao = new ConectaMySql().iniciarConexao();
+
+        try {
+            PreparedStatement ps = conexao.prepareStatement(comandoSQL);
+            if (ps.executeUpdate() != 0){
+                conexao.close();
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }/*******************Alterar Cliente**************/
+    public boolean alterarCliente(String comandoSQL, String dataNorm,String comando) {
+
+        //conexão do banco de dados
+        conexao = new ConectaMySql().iniciarConexao();
+        try {
+            SimpleDateFormat out = new SimpleDateFormat("yyyy-MM-dd");//Formato do BD
+            SimpleDateFormat in = new SimpleDateFormat("dd/MM/yyyy");
+            String data = out.format(in.parse(dataNorm));
+
+            comandoSQL = comandoSQL + data + comando;
+
+            PreparedStatement ps = conexao.prepareStatement(comandoSQL);
+            if (ps.executeUpdate() != 0) {
+                conexao.close(); //Fecha a conexão e libera o recurso
+                return true;
+            }
+
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+            return false;
+    }
 }
